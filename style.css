@@ -14,7 +14,7 @@ body {
 }
 
 .side-panel {
-    width: 98.69%;
+    width: 100.63%;
     height: 600px;
     flex-shrink: 0;
     padding: 20px;
@@ -141,7 +141,14 @@ body {
 }
 
 .middle-text .shop {
+    margin-top: -300px;
     align-content: center;
     width: 100%;
-    height: 100%;
+    height: 98.9vh;
+}
+
+.middle-text .shopbutton {
+    text-decoration: none;
+    vertical-align: top;
+    text-align: left;
 }
