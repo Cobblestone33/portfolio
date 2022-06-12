@@ -1,0 +1,445 @@
+command rod:
+	aliases: fishingrod, fishrod
+	trigger:
+		if inventory of player contains fishing rod:
+			stop
+		else:
+			give player unbreakable fishing rod named "&7Fishing Rod T1" with nbt "{HideFlags:5}"
+
+on right click:
+	if player is sneaking:
+		if player's tool is fishing rod:
+			cancel event
+			create a gui with virtual chest inventory with 4 rows named "&6&lRod Upgrades":
+				make gui all integers between 0 and 36 with black glass pane named "&f"
+				make gui 16 with sunflower named "&eTokens: &6%format({token::%player's uuid%})%"
+				make gui 10 with glowing book named "&6+1 Lure" with lore "&7Price: &e&l1500 TOKENS" and "&7Max: &e&l5":
+					if level of lure of player's tool >= 5:
+						message "&6&lPizzaGenz &eYou cannot buy more lure."
+						stop
+					if {token::%player's uuid%} >= 1500:
+						remove 1500 from {token::%player's uuid%}
+						if level of lure of player's tool >= 1:
+							set {_lore::*} to lore of player's tool
+							enchant player's tool with "lure %(level of lure of player's tool + 1)%" parsed as enchantment type
+							remove "&7- Lure %(level of lure of player's tool - 1)%" from {_lore::*}
+							add "&7- Lure %level of lure of player's tool%" to {_lore::*}
+							set lore of player's tool to {_lore::*}
+							send "&6&lPizzaGenz &eUpgraded Lure by 1."
+						else:
+							set {_lore::*} to lore of player's tool
+							enchant player's tool with lure 1
+							if {_lore::*} doesn't contain "&6&lENCHANTMENTS":
+								add "%nl%&6&lENCHANTMENTS" to {_lore::*}
+							add "&7- Lure 1" to {_lore::*}
+							set lore of player's tool to {_lore::*}
+					else:
+						message "&6&lPizzaGenz &eYou cannot afford lure."
+				
+				make gui 11 with glowing book named "&6+1 Massive Lure" with lore "&eCatch massive fish with more weight." and "&7Price: &e&l5K TOKENS" and "&7Max: &e&l10":
+					if {token::%player's uuid%} >= 5000:
+						set {_lore::*} to lore of player's tool
+						if {_lore::*} contains "&7- Massive Lure 10":
+							message "&6&lPizzaGenz &eMassive Lure is maxed."
+							stop
+						if {_lore::*} doesn't contain "&7- Massive Lure 1" or "&7- Massive Lure 2" or "&7- Massive Lure 3" or "&7- Massive Lure 4" or "&7- Massive Lure 5" or "&7- Massive Lure 6" or "&7- Massive Lure 7" or "&7- Massive Lure 8" or "&7- Massive Lure 9" or "&7- Massive Lure 10":
+							remove 5000 from {token::%player's uuid%}
+							if player's tool isn't enchanted:
+								add "{Enchantments:[{id:lure}]}" to nbt of player's tool
+							if {_lore::*} doesn't contain "&6&lENCHANTMENTS":
+								add "%nl%&6&lENCHANTMENTS" to {_lore::*}
+							add "&7- Massive Lure 1" to {_lore::*}
+							set lore of player's tool to {_lore::*}
+						else:
+							loop {_lore::*}:
+								if loop-value contains "&7- Massive Lure":
+									set {_loopvalue} to loop-value
+									replace "&7- Massive Lure " or "&7- Massive Lure" with "" in {_loopvalue}
+									if {_loopvalue} is "":
+										if {token::%player's uuid%} >= 5000:
+											remove 5000 from {token::%player's uuid%}
+											set {_loopvalue} to "&7- Massive Lure 2"
+											remove "&7- Massive Lure" from {_lore::*}
+											add "&7- Massive Lure 2" to {_lore::*}
+											set lore of player's tool to {_lore::*}
+									else:
+										set {_loopvalue} to "%{_loopvalue}%" parsed as integer
+										if {token::%player's uuid%} >= 5000:
+											remove 5000 from {token::%player's uuid%}
+											send "&6&lPizzaGenz &eUpgraded Massive Lure by 1."
+											remove "&7- Massive Lure %{_loopvalue}%" from {_lore::*}
+											add "&7- Massive Lure %{_loopvalue}+1%" to {_lore::*}
+											set lore of player's tool to {_lore::*}
+					else:
+						message "&6&lPizzaGenz &eYou cannot afford Massive Lure."
+						stop	
+						
+				if player's tool is fishing rod:
+					set {_lore::*} to lore of player's tool
+					if name of player's tool is "&7Fishing Rod T3" or "&7Fishing Rod T4" or "&7Fishing Rod T5":
+					else:
+						make gui 11 with glowing barrier named "&6+1 Massive Lure &7(&4&lLOCKED&7)" with lore "&cYou cannot use this yet! &7You need to have &cFishing Rod T3+!"
+						
+						
+						
+				make gui 12 with glowing book named "&6+1 Net Thrower" with lore "&eChance to catch multiple fish." and "&7Price: &e&l10K TOKENS" and "&7Max: &e&l1":
+					if {token::%player's uuid%} >= 10000:
+						set {_lore::*} to lore of player's tool
+						if {_lore::*} contains "&7- Net Thrower":
+							message "&6&lPizzaGenz &eNet Thrower is maxed."
+							stop
+						if {_lore::*} doesn't contain "&7- Net Thrower 1":
+							remove 10000 from {token::%player's uuid%}
+							if player's tool isn't enchanted:
+								add "{Enchantments:[{id:lure}]}" to nbt of player's tool
+							if {_lore::*} doesn't contain "&6&lENCHANTMENTS":
+								add "%nl%&6&lENCHANTMENTS" to {_lore::*}
+							add "&7- Net Thrower 1" to {_lore::*}
+							set lore of player's tool to {_lore::*}
+					else:
+						message "&6&lPizzaGenz &eYou cannot afford Net Thrower."
+						stop	
+						
+				if player's tool is fishing rod:
+					if name of player's tool is "&7Fishing Rod T4" or "&7Fishing Rod T5":
+					else:
+						make gui 12 with glowing barrier named "&6+1 Net Thrower &7(&4&lLOCKED&7)" with lore "&cYou cannot use this yet! &7You need to have &cFishing Rod T4+!"
+						
+				make gui 19 with glowing book named "&6+1 Crate Fisher" with lore "&ePossibility to get crates from fishing." and "&7Price: &e&l25K TOKENS" and "&7Max: &e&l10":
+					if {token::%player's uuid%} >= 25000:
+						set {_lore::*} to lore of player's tool
+						if {_lore::*} contains "&7- Crate Fisher 10":
+							message "&6&lPizzaGenz &eCrate Fisher is maxed."
+							stop
+						if {_lore::*} doesn't contain "&7- Crate Fisher 1" or "&7- Crate Fisher 2" or "&7- Crate Fisher 3" or "&7- Crate Fisher 4" or "&7- Crate Fisher 5" or "&7- Crate Fisher 6" or "&7- Crate Fisher 7" or "&7- Crate Fisher 8" or "&7- Crate Fisher 9" or "&7- Crate Fisher 10":
+							remove 25000 from {token::%player's uuid%}
+							if player's tool isn't enchanted:
+								add "{Enchantments:[{id:lure}]}" to nbt of player's tool
+							if {_lore::*} doesn't contain "&6&lENCHANTMENTS":
+								add "%nl%&6&lENCHANTMENTS" to {_lore::*}
+							add "&7- Crate Fisher 1" to {_lore::*}
+							set lore of player's tool to {_lore::*}
+						else:
+							loop {_lore::*}:
+								if loop-value contains "&7- Crate Fisher ":
+									set {_loopvalue} to loop-value
+									replace "&7- Crate Fisher " or "&7- Crate Fisher" with "" in {_loopvalue}
+									if {_loopvalue} is "":
+										if {token::%player's uuid%} >= 25000:
+											remove 25000 from {token::%player's uuid%}
+											set {_loopvalue} to "&7- Crate Fisher 2"
+											remove "&7- Crate Fisher" from {_lore::*}
+											add "&7- Crate Fisher 2" to {_lore::*}
+											set lore of player's tool to {_lore::*}
+									else:
+										set {_loopvalue} to "%{_loopvalue}%" parsed as integer
+										if {token::%player's uuid%} >= 25000:
+											remove 25000 from {token::%player's uuid%}
+											send "&6&lPizzaGenz &eUpgraded Crate Fisher by 1."
+											remove "&7- Crate Fisher %{_loopvalue}%" from {_lore::*}
+											add "&7- Crate Fisher %{_loopvalue}+1%" to {_lore::*}
+											set lore of player's tool to {_lore::*}
+					else:
+						message "&6&lPizzaGenz &eYou cannot afford Crate Fisher."
+						stop	
+						
+				if player's tool is fishing rod:
+					set {_lore::*} to lore of player's tool
+					if name of player's tool is "&7Fishing Rod T5":
+					else:
+						make gui 19 with glowing barrier named "&6+1 Crate Fisher &7(&4&lLOCKED&7)" with lore "&cYou cannot use this yet! &7You need to have &cFishing Rod T5!"
+						
+						
+						
+				make gui 15 with paper named "&bPrestige your Fishing Rod!" with lore "&4Warning: This will reset your enchants." and "&cCost: 10000 Tokens & 5 Lure":
+					if {token::%player's uuid%} >= 10000:
+						if name of player's tool is "&7Fishing Rod T5":
+							send "&6&lPizzaGenz &eYou have maxed your prestige for your fishing rod."
+							stop
+					else:
+						send "&6&lPizzaGenz &eYou cannot afford this!"
+						stop
+					set {_e} to level of lure of player's tool
+					if {_e} >= 5:
+						if name of player's tool contains "Fishing Rod":
+							close player's inventory
+							set level of lure of player's tool to 0
+							clear lore of player's tool
+							remove 10000 from {token::%player's uuid%}
+							send "&6&lPizzaGenz &eYou have prestiged your pickaxe."
+						if name of player's tool is "&7Fishing Rod T1":
+							set name of player's tool to "&7Fishing Rod T2"
+							stop
+						else if name of player's tool is "&7Fishing Rod T2":
+							set name of player's tool to "&7Fishing Rod T3"
+							send "&6You have unlocked &e&lMASSIVE LURE &6for your pickaxe."
+							stop
+						else if name of player's tool is "&7Fishing Rod T3":
+							set name of player's tool to "&7Fishing Rod T4"
+							send "&bYou have unlocked &9&lNET THROWER &bfor your pickaxe."
+							stop
+						else if name of player's tool is "&7Fishing Rod T4":
+							set name of player's tool to "&7Fishing Rod T5"
+							send "&cYou have unlocked &4&lCRATE FISHER &cfor your pickaxe."
+							stop
+					else:
+						send "&6&lPizzaGenz &eYou do not have the required enchants to prestige your pickaxe"
+						
+						
+						
+						
+						
+						
+						
+				make gui 20 with glowing oak sign named "&c&lMore Enchantments coming soon"
+			open last gui to player
+
+
+on fishing:
+	if "%fishing state%" is "CAUGHT_FISH":
+		if size of {fishbucket::%player's uuid%::*} is more than or equal to 18:
+			send title "&b&lFISH BUCKET IS FULL!" to player
+			delete caught entity
+			stop
+		if "%lore of player's tool%" contains "&7- Crate Fisher":
+			loop 10 times:
+				if lore of player's tool contains "&7- Crate Fisher %loop-value%":
+					chance of 0.1 * loop-value%:
+						chance of 1%:
+							broadcast "&6&lCrate Fisher &efound %player% a &6&lLEGENDARY CRATE!"
+							send "&6&lCrate Fisher &ehas caught you a &6&lLEGENDARY CRATE!"
+							give player 1 of glowing ender chest named "&7Crate &8(&6&lLEGENDARY&8)"
+							stop
+						chance of 10%:
+							broadcast "&6&lCrate Fisher &efound %player% a &5&lEPIC CRATE!"
+							send "&6&lCrate Fisher &ehas caught you a &5&lEPIC CRATE!"
+							give player 1 of glowing ender chest named "&7Crate &8(&5&lEPIC&8)"
+							stop
+						chance of 25%:
+							send "&6&lCrate Fisher &ehas caught you a &9&lRARE CRATE!"
+							give player 1 of glowing chest named "&7Crate &8(&9&lRARE&8)"
+							stop
+						chance of 50%:
+							send "&6&lCrate Fisher &ehas caught you a &b&lADVANCED CRATE!"
+							give player 1 of glowing chest named "&7Crate &8(&b&lADVANCED&8)"
+							stop
+						chance of 100%:
+							send "&6&lCrate Fisher &ehas caught you a &7&lBASIC CRATE!"
+							give player 1 of glowing chest named "&7Crate &8(&7&lBASIC&8)"
+							stop
+				if lore of player's tool contains "&7- Crate Fisher":
+					chance of 0.1%:
+						chance of 1%:
+							broadcast "&6&lCrate Fisher &efound %player% a &6&lLEGENDARY CRATE!"
+							send "&6&lCrate Fisher &ehas caught you a &6&lLEGENDARY CRATE!"
+							give player 1 of glowing ender chest named "&7Crate &8(&6&lLEGENDARY&8)"
+							stop
+						chance of 10%:
+							broadcast "&6&lCrate Fisher &efound %player% a &5&lEPIC CRATE!"
+							send "&6&lCrate Fisher &ehas caught you a &5&lEPIC CRATE!"
+							give player 1 of glowing ender chest named "&7Crate &8(&5&lEPIC&8)"
+							stop
+						chance of 25%:
+							send "&6&lCrate Fisher &ehas caught you a &9&lRARE CRATE!"
+							give player 1 of glowing chest named "&7Crate &8(&9&lRARE&8)"
+							stop
+						chance of 50%:
+							send "&6&lCrate Fisher &ehas caught you a &b&lADVANCED CRATE!"
+							give player 1 of glowing chest named "&7Crate &8(&b&lADVANCED&8)"
+							stop
+						chance of 100%:
+							send "&6&lCrate Fisher &ehas caught you a &7&lBASIC CRATE!"
+							give player 1 of glowing chest named "&7Crate &8(&7&lBASIC&8)"
+							stop
+
+
+
+
+
+
+
+on break:
+	if world of player is "fishing":
+		if player isn't op:
+			cancel event
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+on fishing:	
+	if "%fishing state%" is "CAUGHT_FISH":
+		if size of {fishbucket::%player's uuid%::*} is more than or equal to 18:
+			send title "&b&lFISH BUCKET IS FULL!" to player
+			delete caught entity
+			stop
+		delete caught entity
+		set {_lore::*} to lore of player's tool
+		loop {_lore::*}:
+			if loop-value contains "&7- Massive Lure":
+				set {_loopvalue} to loop-value
+				replace "&7- Massive Lure " or "&7- Massive Lure" with "" in {_loopvalue}
+		set {_enchantweight} to {_loopvalue} parsed as integer
+		add 1 to {_enchantweight}
+		chance of 10%:
+			send "&bYou've caught an &3&lPUFFER FISH"
+			set {_weight} to (random number between 0.3 and 0.5)*{_enchantweight}
+			set {_fish} to pufferfish named "&3&lPUFFERFISH &7&o(&bWeight: &3&n%{_weight}%&7&o)"
+			add {_fish} to {fishbucket::%player's uuid%::*}
+		else:
+			chance of 30%:
+				send "&bYou've caught an &3&lTROPICAL FISH"
+				set {_weight} to (random number between 0.2 and 0.35)*{_enchantweight}
+				set {_fish} to tropical fish named "&3&lTROPICAL FISH &7&o(&bWeight: &3&n%{_weight}%&7&o)"
+				add {_fish} to {fishbucket::%player's uuid%::*}
+			else:
+				chance of 50%:
+					send "&bYou've caught an &3&lSALMON"
+					set {_weight} to (random number between 0.10 and 0.30)*{_enchantweight}
+					set {_fish} to SALMON named "&3&lSALMON &7&o(&bWeight: &3&n%{_weight}%&7&o)"
+					add {_fish} to {fishbucket::%player's uuid%::*}
+				else:
+					chance of 100%:
+						send "&bYou've caught an &3&lCOD"
+						set {_weight} to (random number between 0.10 and 0.30)*{_enchantweight}
+						set {_fish} to cod named "&3&lCOD &7&o(&bWeight: &3&n%{_weight}%&7&o)"
+						add {_fish} to {fishbucket::%player's uuid%::*}
+		
+		chance of 10%:
+			send "&b&lNet Thrower &bcaught another fish! 2 Fish in total."
+			chance of 10%:
+				send "&bYou've caught an &3&lPUFFER FISH"
+				set {_weight} to (random number between 0.3 and 0.5)*{_enchantweight}
+				set {_fish} to pufferfish named "&3&lPUFFERFISH &7&o(&bWeight: &3&n%{_weight}%&7&o)"
+				add {_fish} to {fishbucket::%player's uuid%::*}
+			else:
+				chance of 30%:
+					send "&bYou've caught an &3&lTROPICAL FISH"
+					set {_weight} to (random number between 0.2 and 0.35)*{_enchantweight}
+					set {_fish} to tropical fish named "&3&lTROPICAL FISH &7&o(&bWeight: &3&n%{_weight}%&7&o)"
+					add {_fish} to {fishbucket::%player's uuid%::*}
+				else:
+					chance of 50%:
+						send "&bYou've caught an &3&lSALMON"
+						set {_weight} to (random number between 0.10 and 0.30)*{_enchantweight}
+						set {_fish} to SALMON named "&3&lSALMON &7&o(&bWeight: &3&n%{_weight}%&7&o)"
+						add {_fish} to {fishbucket::%player's uuid%::*}
+					else:
+						chance of 100%:
+							send "&bYou've caught an &3&lCOD"
+							set {_weight} to (random number between 0.10 and 0.30)*{_enchantweight}
+							set {_fish} to cod named "&3&lCOD &7&o(&bWeight: &3&n%{_weight}%&7&o)"
+							add {_fish} to {fishbucket::%player's uuid%::*}
+
+			loop {_lore::*}:
+				if loop-value contains "&7- Net Thrower":
+					chance of 10%:
+						send "&b&lNet Thrower &bcaught another fish! 3 Fish in total."
+					chance of 10%:
+						send "&bYou've caught an &3&lPUFFER FISH"
+						set {_weight} to (random number between 0.3 and 0.5)*{_enchantweight}
+						set {_fish} to pufferfish named "&3&lPUFFERFISH &7&o(&bWeight: &3&n%{_weight}%&7&o)"
+						add {_fish} to {fishbucket::%player's uuid%::*}
+					else:
+						chance of 30%:
+							send "&bYou've caught an &3&lTROPICAL FISH"
+							set {_weight} to (random number between 0.2 and 0.35)*{_enchantweight}
+							set {_fish} to tropical fish named "&3&lTROPICAL FISH &7&o(&bWeight: &3&n%{_weight}%&7&o)"
+							add {_fish} to {fishbucket::%player's uuid%::*}
+						else:
+							chance of 50%:
+								send "&bYou've caught an &3&lSALMON"
+								set {_weight} to (random number between 0.10 and 0.30)*{_enchantweight}
+								set {_fish} to SALMON named "&3&lSALMON &7&o(&bWeight: &3&n%{_weight}%&7&o)"
+								add {_fish} to {fishbucket::%player's uuid%::*}
+							else:
+								chance of 100%:
+									send "&bYou've caught an &3&lCOD"
+									set {_weight} to (random number between 0.10 and 0.30)*{_enchantweight}
+									set {_fish} to cod named "&3&lCOD &7&o(&bWeight: &3&n%{_weight}%&7&o)"
+									add {_fish} to {fishbucket::%player's uuid%::*}
+		
+
+				else:
+					stop
+				
+
+
+
+
+command fishbucket:
+	trigger:
+		open chest with 3 row named "&b&lFISH BUCKET" to player
+		loop 9 times:
+			format slot loop-value+17 of player with black glass pane named "&f" to close
+		loop {fishbucket::%player's uuid%::*}:
+			set {_loopvalue} to loop-value
+			set {_loopindex} to loop-index parsed as integer
+			format slot {_loopindex} - (1) of player with {_loopvalue} to close
+			format slot 22 of player with bucket named "&f&lSellall Fish" to run [send "%player% has sold their fish bucket!" to console]
+	
+	
+	
+on inventory click:
+	if name of player's inventory is "&b&lFISH BUCKET":
+		if event-slot is 22:
+			if name of event-slot contains "Sellall Fish":
+			else:
+				stop
+			loop {fishbucket::%player's uuid%::*}:
+				add 1 to {_amount}
+				set {_loopvalue} to name of loop-value
+				if "%{_loopvalue}%" contains "cod":
+					set {_item} to {_loopvalue}
+					replace "&7&o(&bWeight: &3&n" and "&7&o)" and "&3&lCOD " with "" in {_item}
+					replace "&7" and "&o" and "(" and "&b" and "Weight:" and "&3" and "&n" and ")" and "&3" and "&l" and "COD" and " " with "" in {_item}
+					set {_item} to {_item} parsed as number
+					add 1 to {_item}
+					set {_fish} to 10*{_item}
+				if "%{_loopvalue}%" contains "salmon":
+					set {_item} to {_loopvalue}
+					replace "&7&o(&bWeight: &3&n" and "&7&o)" and "&3&lSALMON " with "" in {_item}
+					replace "&7" and "&o" and "(" and "&b" and "Weight:" and "&3" and "&n" and ")" and "&3" and "&l" and "SALMON" and " " with "" in {_item}
+					set {_item} to {_item} parsed as number
+					add 1 to {_item}
+					set {_fish} to 20*{_item}
+					
+				if "%{_loopvalue}%" contains "Tropical Fish":
+					set {_item} to {_loopvalue}
+					replace "&7&o(&bWeight: &3&n" and "&7&o)" and "&3&lTropical Fish " with "" in {_item}
+					replace "&7" and "&o" and "(" and "&b" and "Weight:" and "&3" and "&n" and ")" and "&3" and "&l" and "Tropical Fish" and " " with "" in {_item}
+					set {_item} to {_item} parsed as number
+					add 1 to {_item}
+					set {_fish} to 50*{_item}
+				if "%{_loopvalue}%" contains "PUFFERFISH":
+					set {_item} to {_loopvalue}
+					replace "&7&o(&bWeight: &3&n" and "&7&o)" and "&3&lPufferfish " with "" in {_item}
+					replace "&7" and "&o" and "(" and "&b" and "Weight:" and "&3" and "&n" and ")" and "&3" and "&l" and "PUFFERFISH" and " " with "" in {_item}
+					set {_item} to {_item} parsed as number
+					add 1 to {_item}
+					set {_fish} to 75*{_item}
+				add {_fish} to {_total}
+			add {_total} to {token::%player's uuid%}
+			send title "&6&lYou have sold &e&l&o%{_amount}% FISH!" with subtitle "&6&lfor &e&l&o%{_total}% TOKENS!" to player
+			clear {fishbucket::%player's uuid%::*}
+			close player's inventory
